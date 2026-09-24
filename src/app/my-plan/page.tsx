@@ -1,11 +1,17 @@
 "use client"
 
+
+import LibraryCard from "@/component/shared/LibraryCard";
 import { WorkoutContext } from "@/context/WorkoutContext"
+import { tworkout } from "@/types";
 
 import { useContext } from "react"
 
 const MyplanPage = () => {
-    const { todayplan , save } = useContext(WorkoutContext) 
+    const { todayplan, save } = useContext(WorkoutContext) as {
+      todayplan: tworkout[];
+      save: tworkout[];
+    };
 
     console.log(save);
     
@@ -16,7 +22,7 @@ const MyplanPage = () => {
      
          
         <div>
-            <section className="bg-[#0d0f12] px-7 py-5 text-white container mx-auto">
+            <section className="px-7 py-5 text-white container mx-auto">
   <div>
     <h2 className="text-lg font-bold uppercase">My Plan</h2>
     <p className="mt-1 text-[10px] text-gray-400">
@@ -46,6 +52,25 @@ const MyplanPage = () => {
 
   </div>
 </section>
+<div className="tabs tabs-box container mx-auto">
+  <input type="radio" name="my_tabs_6" className="tab" aria-label="Today's plan" defaultChecked/>
+  <div className="tab-content bg-base-100 border-base-300 p-6">
+    {
+        todayplan.map((plan : tworkout) =>{
+            return <LibraryCard key={plan.id} workout={plan}></LibraryCard>
+        })
+    }
+  </div>
+
+  <input type="radio" name="my_tabs_6" className="tab" aria-label="saved"  />
+  <div className="tab-content bg-base-100 border-base-300 p-6">  {
+        save.map((plan : tworkout) =>{
+            return <LibraryCard key={plan.id} workout={plan}></LibraryCard>
+        })
+    }</div>
+
+ 
+</div>
         </div>
     );
 };
