@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import TodayplanButton from '@/component/Todaysplan/TodayplanButton';
+import SavelaterButton from '@/component/Todaysplan/SavelaterButton';
 
 interface propparam {
     params : {
@@ -175,10 +176,7 @@ const WorkoutDetail = async({params} : propparam) => {
 
               <TodayplanButton detail = {detail}></TodayplanButton>
 
-              <button className="inline-flex h-8 items-center gap-2 rounded-md border border-[#343943] px-4 text-[10px] font-medium text-gray-300 transition hover:border-gray-500 hover:text-white">
-                <span>♡</span>
-                Save for later
-              </button>
+              <SavelaterButton detail = {detail}></SavelaterButton>
 
             </div>
 
