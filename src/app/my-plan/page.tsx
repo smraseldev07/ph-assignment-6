@@ -1,21 +1,36 @@
 "use client"
 
 
-import LibraryCard from "@/component/shared/LibraryCard";
+
 import { WorkoutContext } from "@/context/WorkoutContext"
 import { tworkout } from "@/types";
+import Image from "next/image";
 
-import { useContext } from "react"
+
+import { useContext, useState } from "react"
 
 const MyplanPage = () => {
-    const { todayplan, save } = useContext(WorkoutContext) as {
+    const { todayplan, save, settodayplan, setsave } = useContext(WorkoutContext) as {
       todayplan: tworkout[];
       save: tworkout[];
+      settodayplan: (plans: tworkout[]) => void;
+      setsave: (plans: tworkout[]) => void;
     };
 
-    console.log(save);
-    
+ 
+const handleRemove = (id: number) => {
+  const newPlan = todayplan.filter((plan) => {
+    return plan.id !== id;
+  });
+  const newsave = save.filter((plan) => {
+    return plan.id !== id;
+  });
 
+  settodayplan(newPlan);
+  setsave(newsave)
+};
+
+const [activeTab, setActiveTab] = useState("today");
     
     
     return (
@@ -35,37 +50,132 @@ const MyplanPage = () => {
     {/* Exercises */}
     <div className="border-r border-[#252932] px-4 py-5">
       <p className="text-[9px] text-gray-500">Exercises</p>
-      <h3 className="mt-1 text-2xl font-bold text-[#b7ff00]">0</h3>
+      <h3 className="mt-1 text-2xl font-bold text-[#b7ff00]">
+         {activeTab === "today" ? todayplan.length : save.length}
+      </h3>
     </div>
 
     {/* Minutes */}
     <div className="border-r border-[#252932] px-4 py-5">
       <p className="text-[9px] text-gray-500">Minutes</p>
-      <h3 className="mt-1 text-2xl font-bold">0</h3>
+      <h3 className="mt-1 text-2xl font-bold">
+         {activeTab === "today"
+      ? todayplan.reduce((total, plan) => total + plan.duration, 0)
+      : save.reduce((total, plan) => total + plan.duration, 0)}
+      </h3>
     </div>
 
     {/* Calories */}
     <div className="px-4 py-5">
       <p className="text-[9px] text-gray-500">Calories</p>
-      <h3 className="mt-1 text-2xl font-bold">0</h3>
+      <h3 className="mt-1 text-2xl font-bold">
+         {activeTab === "today"
+      ? todayplan.reduce((total, plan) => total + plan.caloriesBurned, 0)
+      : save.reduce((total, plan) => total + plan.caloriesBurned, 0)}
+      </h3>
     </div>
 
   </div>
 </section>
 <div className="tabs tabs-box container mx-auto">
-  <input type="radio" name="my_tabs_6" className="tab" aria-label="Today's plan" defaultChecked/>
-  <div className="tab-content bg-base-100 border-base-300 p-6">
+  <input onClick={() => setActiveTab("today")}  type="radio" name="my_tabs_6" className="tab" aria-label="Today's plan" defaultChecked/>
+  <div  className="tab-content bg-base-100 border-base-300 p-6">
     {
         todayplan.map((plan : tworkout) =>{
-            return <LibraryCard key={plan.id} workout={plan}></LibraryCard>
+            return <div key={plan.id} className="flex w-full items-center gap-4 rounded-2xl border border-slate-800 bg-[#11141a] p-2.5 text-white">
+
+      {/* Image */}
+      <Image
+        src={plan.image}
+        alt={plan.name}
+        className="h-20 w-32 rounded-xl object-cover"
+        width={200}
+        height={80}
+      />
+
+      {/* Plan Info */}
+      <div className="flex-1">
+        <h2 className="text-sm font-bold uppercase tracking-wide">
+          {plan.name}
+        </h2>
+
+        <p className="mt-1 text-xs text-slate-400">
+          {plan.muscleGroups.join(", ")}
+        </p>
+
+        <div className="mt-2 flex items-center gap-4 text-xs text-slate-300">
+          <span>◷ {plan.duration} min</span>
+          <span>🔥 {plan.caloriesBurned} kcal</span>
+          <span>☆ {plan.rating}</span>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex items-center gap-3">
+        <button className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
+          View Details
+        </button>
+
+        <button className="rounded-full bg-lime-400 px-5 py-2 text-xs font-semibold text-black hover:bg-lime-300">
+          ✓ Mark as Done
+        </button>
+
+        <button  onClick={() => handleRemove(plan.id)} className="px-2 text-xl text-slate-500 hover:text-white">
+          ×
+        </button>
+      </div>
+
+    </div>
         })
     }
   </div>
 
-  <input type="radio" name="my_tabs_6" className="tab" aria-label="saved"  />
+  <input  onClick={() => setActiveTab("save")} type="radio" name="my_tabs_6" className="tab" aria-label="saved"  />
   <div className="tab-content bg-base-100 border-base-300 p-6">  {
         save.map((plan : tworkout) =>{
-            return <LibraryCard key={plan.id} workout={plan}></LibraryCard>
+            return  <div key={plan.id} className="flex w-full items-center gap-4 rounded-2xl border border-slate-800 bg-[#11141a] p-2.5 text-white">
+
+      {/* Image */}
+      <Image
+        src={plan.image}
+        alt={plan.name}
+        className="h-20 w-32 rounded-xl object-cover"
+         width={200}
+        height={80}
+      />
+
+      {/* Plan Info */}
+      <div className="flex-1">
+        <h2 className="text-sm font-bold uppercase tracking-wide">
+          {plan.name}
+        </h2>
+
+        <p className="mt-1 text-xs text-slate-400">
+          {plan.muscleGroups.join(", ")}
+        </p>
+
+        <div className="mt-2 flex items-center gap-4 text-xs text-slate-300">
+          <span>◷ {plan.duration} min</span>
+          <span>🔥 {plan.caloriesBurned} kcal</span>
+          <span>☆ {plan.rating}</span>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex items-center gap-3">
+      
+        <button className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
+          View Details
+        </button>
+    
+
+      
+        <button onClick={() => handleRemove(plan.id)} className="px-2 text-xl text-slate-500 hover:text-white">
+          ×
+        </button>
+      </div>
+
+    </div>
         })
     }</div>
 
