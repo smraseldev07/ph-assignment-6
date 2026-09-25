@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import TodayplanButton from '@/component/Todaysplan/TodayplanButton';
 import SavelaterButton from '@/component/Todaysplan/SavelaterButton';
+import { notFound } from 'next/navigation';
 
 interface propparam {
     params : {
@@ -25,9 +26,15 @@ const WorkoutDetail = async({params} : propparam) => {
 
     const alldetail = await getlibrarydetail()
 
-    const detail = alldetail.find((detail: { id: number; }) => detail.id === Number(id))
+    const detail = alldetail.find(
+  (item: { id: number }) => item.id === Number(id)
+);
 
-    console.log(detail);
+if (!detail) {
+  notFound();
+}
+
+  
     
 
 

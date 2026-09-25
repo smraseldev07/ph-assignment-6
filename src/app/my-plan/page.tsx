@@ -5,9 +5,11 @@
 import { WorkoutContext } from "@/context/WorkoutContext"
 import { tworkout } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 
 import { useContext, useState } from "react"
+import { toast } from "react-toastify";
 
 const MyplanPage = () => {
     const { todayplan, save, settodayplan, setsave } = useContext(WorkoutContext) as {
@@ -28,6 +30,12 @@ const handleRemove = (id: number) => {
 
   settodayplan(newPlan);
   setsave(newsave)
+};
+
+const handleDone = (plan: tworkout) => {
+  settodayplan(todayplan.filter((item) => item.id !== plan.id));
+
+  toast.success(`${plan.name} completed!`);
 };
 
 const [activeTab, setActiveTab] = useState("today");
@@ -112,14 +120,18 @@ const [activeTab, setActiveTab] = useState("today");
 
       {/* Buttons */}
       <div className="flex items-center gap-3">
-        <button className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
+      
+        <Link href={`/${plan.id}`} className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
           View Details
-        </button>
+        </Link>
+    
 
-        <button className="rounded-full bg-lime-400 px-5 py-2 text-xs font-semibold text-black hover:bg-lime-300">
-          ✓ Mark as Done
-        </button>
-
+      <button
+  onClick={() => handleDone(plan)}
+  className="rounded-full bg-lime-400 px-5 py-2 text-xs font-semibold text-black hover:bg-lime-300"
+>
+  ✓ Mark as Done
+</button>
         <button  onClick={() => handleRemove(plan.id)} className="px-2 text-xl text-slate-500 hover:text-white">
           ×
         </button>
@@ -164,9 +176,9 @@ const [activeTab, setActiveTab] = useState("today");
       {/* Buttons */}
       <div className="flex items-center gap-3">
       
-        <button className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
+        <Link href={`/${plan.id}`} className="rounded-full border border-slate-700 px-5 py-2 text-xs text-white hover:bg-slate-800">
           View Details
-        </button>
+        </Link>
     
 
       

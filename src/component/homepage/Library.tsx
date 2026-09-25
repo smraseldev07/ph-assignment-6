@@ -1,5 +1,4 @@
 import { tworkout } from '@/types';
-import Image from 'next/image';
 import React from 'react';
 import LibraryCard from '../shared/LibraryCard';
 
@@ -23,7 +22,7 @@ const Library = async() => {
             <p className='text-[#9CA3AF]'>Twelve lifts covering every major muscle group.</p>
            </div>
 
-           <div className='my-3 grid grid-cols-3 gap-3'>
+           <div className="my-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {
                 workouts.map((workout:tworkout , ind : number) => {
                    return <LibraryCard workout = {workout} key={ind}></LibraryCard>
